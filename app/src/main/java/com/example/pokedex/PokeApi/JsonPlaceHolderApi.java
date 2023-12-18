@@ -4,6 +4,7 @@ package com.example.pokedex.PokeApi;
 import com.example.pokedex.ClasesComunes.DataList;
 import com.example.pokedex.ListaPokemons;
 import com.example.pokedex.PokemonDetails;
+import com.example.pokedex.models.ColorPokemon;
 import com.example.pokedex.models.PokeDetails;
 import com.example.pokedex.models.PokeList;
 import com.example.pokedex.models.Pokemon;
@@ -21,4 +22,7 @@ public interface JsonPlaceHolderApi {
 
     @GET("pokemon/{id}")
     Call<PokeDetails> getPokemonDetails(@Path("id") String id);
+
+    @GET("pokemon-species/{id}")
+    Call<ColorPokemon> getColor(@Path("id") String id);
 }

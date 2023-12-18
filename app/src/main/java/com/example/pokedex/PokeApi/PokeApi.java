@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.pokedex.ClasesComunes.DataList;
 import com.example.pokedex.ClasesComunes.DataSimple;
 import com.example.pokedex.PokemonDetails;
+import com.example.pokedex.models.ColorPokemon;
 import com.example.pokedex.models.PokeDetails;
 import com.example.pokedex.models.PokeList;
 import com.example.pokedex.models.Pokemon;
@@ -71,6 +72,27 @@ public class PokeApi {
 
             @Override
             public void onFailure(Call<PokeDetails> call, Throwable t) {
+                Log.d("POKEDEX", "onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+    public static void getColorPokemon(int id, MutableLiveData<String> color) {
+        Call<ColorPokemon> call = jsonPlaceHolderApi.getColor(String.valueOf(id));
+
+        call.enqueue(new Callback<ColorPokemon>() {
+            @Override
+            public void onResponse(Call<ColorPokemon> call, Response<ColorPokemon> response) {
+                ColorPokemon colorPokemon = response.body();
+                if (colorPokemon != null) {
+                    color.setValue(colorPokemon.getColor().getName());
+                } else {
+                    Log.d("POKEDEX", "onResponse: es nulo");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ColorPokemon> call, Throwable t) {
                 Log.d("POKEDEX", "onFailure: " + t.getMessage());
             }
         });

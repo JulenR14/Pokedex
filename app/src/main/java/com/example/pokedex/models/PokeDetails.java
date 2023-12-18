@@ -26,11 +26,16 @@ public class PokeDetails {
     public static class Stats {
         int base_stat;
         DataSimple stat;
+
+        public DataSimple getStat() { return stat; }
+        public int getBase_stat() { return base_stat; }
     }
 
     public static class Types {
         int slot;
         DataSimple type;
+
+        public DataSimple getType() { return type; }
     }
 
 }

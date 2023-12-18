@@ -18,12 +18,20 @@ public class ViewModelPokemon extends AndroidViewModel {
 
     MutableLiveData<List<DataSimple>> pokemonList = new MutableLiveData<>();
     MutableLiveData<PokeDetails> pokemonSeleccionado = new MutableLiveData<>();
+    MutableLiveData<String> colorSeleccionado = new MutableLiveData<>();
 
     void selectPokemon(int pokemon) {
         PokeApi.getPokemonDetails(pokemon, pokemonSeleccionado);
         //this.pokemonSeleccionado.setValue(pokemon);
     }
 
+    void selectColor(int id) {
+        PokeApi.getColorPokemon(id, colorSeleccionado);
+    }
+
+    MutableLiveData<String> colorSelected() {
+        return colorSeleccionado;
+    }
     MutableLiveData<PokeDetails> pokemonSelected() {
         return pokemonSeleccionado;
     }

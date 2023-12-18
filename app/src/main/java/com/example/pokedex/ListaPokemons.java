@@ -17,11 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.graphics.Color;
 
 import com.bumptech.glide.Glide;
 import com.example.pokedex.ClasesComunes.DataSimple;
+import com.example.pokedex.PokeApi.PokeApi;
 import com.example.pokedex.databinding.FragmentListaPokemonsBinding;
 import com.example.pokedex.models.Pokemon;
+import com.google.android.material.color.utilities.CorePalette;
 
 import java.util.List;
 
@@ -94,6 +97,9 @@ public class ListaPokemons extends Fragment {
             Glide.with(holder.itemView)
                     .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+ id +".png")
                     .into(holder.imageView);
+            viewModel.selectColor(Integer.parseInt(id));
+            //holder.imageView.setBackgroundColor(Color.parseColor(viewModel.colorSelected().getValue()));
+
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,7 +107,6 @@ public class ListaPokemons extends Fragment {
                     viewModel.selectPokemon(Integer.parseInt(id));
                     navController.navigate(R.id.pokemonDetails);
                 }
-
             });
         }
 
