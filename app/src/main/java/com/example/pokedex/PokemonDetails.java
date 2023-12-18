@@ -1,13 +1,19 @@
 package com.example.pokedex;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.pokedex.databinding.FragmentListaPokemonsBinding;
 import com.example.pokedex.databinding.FragmentPokemonDetailsBinding;
 import com.example.pokedex.models.PokeDetails;
@@ -70,6 +78,24 @@ public class PokemonDetails extends Fragment {
                     binding.spdIndicator.setProgress(pokemonDetails.getStats().get(3).getBase_stat());
                 }
                 binding.expIndicator.setProgress(pokemonDetails.getBase_experience());
+
+                Glide.with(binding.pokemonImage).asBitmap().load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+ pokemonDetails.getId() +".png")
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                                Palette.from(resource).generate(palette -> {
+                                    if (palette!=null){
+                                        binding.pokemonImage.setBackgroundColor(palette.getDominantColor(Color.parseColor("#000000")));
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                            }
+                        });
             }
         });
     }

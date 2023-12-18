@@ -13,10 +13,8 @@
         <ImageView
             android:id="@+id/pokemonImage"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:backgroundTint="#C600B4D4"
-            android:background="#C600B4D4" />
+            android:layout_height="250dp"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/pokemonName"
@@ -126,7 +124,7 @@
                         android:layout_weight="3"
                         android:textSize="20dp"
                         android:textAlignment="center"
-                        android:textColor="@color/background800"
+                        android:textColor="@color/white"
                         android:text="HP" />
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -157,7 +155,7 @@
                             android:layout_weight="3"
                             android:textSize="20dp"
                             android:textAlignment="center"
-                            android:textColor="@color/background800"
+                            android:textColor="@color/white"
                             android:text="ATK" />
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -189,7 +187,7 @@
                             android:layout_weight="3"
                             android:textSize="20dp"
                             android:textAlignment="center"
-                            android:textColor="@color/background800"
+                            android:textColor="@color/white"
                             android:text="DEF" />
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -221,7 +219,7 @@
                             android:layout_weight="3"
                             android:textSize="20dp"
                             android:textAlignment="center"
-                            android:textColor="@color/background800"
+                            android:textColor="@color/white"
                             android:text="SPD" />
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -253,7 +251,7 @@
                             android:layout_weight="3"
                             android:textSize="20dp"
                             android:textAlignment="center"
-                            android:textColor="@color/background800"
+                            android:textColor="@color/white"
                             android:text="EXP" />
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator

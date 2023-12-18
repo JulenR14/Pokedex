@@ -1,15 +1,20 @@
 package com.example.pokedex;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,10 +22,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.graphics.Color;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.pokedex.ClasesComunes.DataSimple;
 import com.example.pokedex.PokeApi.PokeApi;
 import com.example.pokedex.databinding.FragmentListaPokemonsBinding;
@@ -51,6 +63,8 @@ public class ListaPokemons extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.toolbar.setTitle("Pokedex");
+
         //creamos el objeto de la clase ViewModelPokemon y nav controller
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModelPokemon.class);
         navController = Navigation.findNavController(view);
@@ -79,12 +93,13 @@ public class ListaPokemons extends Fragment {
         //texto y imagen que se muetra en la card de cada pokemon
         TextView name;
         ImageView imageView;
-
+        ProgressBar pb;
         CardView cardView;
         public PokemonViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nombrePokemon);
             imageView = itemView.findViewById(R.id.imagePokemon);
+            pb = itemView.findViewById(R.id.progress);
             cardView = itemView.findViewById(R.id.cardPokemon);
         }
     }
@@ -107,6 +122,7 @@ public class ListaPokemons extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PokemonViewHolder holder, int position) {
+            holder.pb.setVisibility(View.VISIBLE);
             //se obtiene el pokemon de la lista
             DataSimple pokemon = getPokemon(position);
             //se asigna el nombre del pokemon
@@ -116,17 +132,41 @@ public class ListaPokemons extends Fragment {
             //se asigna la imagen del pokemon con el id
             Glide.with(holder.itemView)
                     .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+ id +".png")
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            holder.pb.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            holder.pb.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .into(holder.imageView);
-            viewModel.selectColor(Integer.parseInt(id));
-         /*   viewModel.colorSelected().observe(getViewLifecycleOwner(), new Observer<String>() {
-                @Override
-                public void onChanged(String s) {
-                    //holder.cardView.setCardBackgroundColor(Color.parseColor(s));
-                    holder.imageView.setBackgroundColor(Color.parseColor(s));
-                }
-            });*/
-            //holder.cardView.setCardBackgroundColor(Color.parseColor(viewModel.colorSelected().getValue()));
-            //holder.imageView.setBackgroundColor(Color.parseColor(viewModel.colorSelected().getValue()));
+
+            Glide.with(holder.cardView).asBitmap().load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+ id +".png")
+                            .into(new CustomTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                                    Palette.from(resource).generate(palette -> {
+                                        if (palette!=null){
+                                            GradientDrawable grad = new GradientDrawable();
+                                            grad.setColors(new int[]{palette.getDominantColor(Color.rgb(80, 80,80)), Color.rgb(80, 80,80)});
+                                            grad.setCornerRadius(20f);
+                                            holder.cardView.setBackground(grad);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                }
+                            });
 
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
