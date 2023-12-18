@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,6 +35,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ListaPokemons extends Fragment {
+    //atributos
 
     FragmentListaPokemonsBinding binding;
     ViewModelPokemon viewModel;
@@ -49,34 +51,48 @@ public class ListaPokemons extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //creamos el objeto de la clase ViewModelPokemon y nav controller
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModelPokemon.class);
         navController = Navigation.findNavController(view);
 
+        //creamos el objeto de la clase PokemonAdapter
         PokemonAdapter pokemonAdapter = new PokemonAdapter();
 
+        //creamos el objeto de la clase GridLayoutManager dentro del metodo
+        // para poder mostrar los pokemons en forma de grid
         binding.recyclerViewPokemons.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        //asignamos el adaptador al recycler
         binding.recyclerViewPokemons.setAdapter(pokemonAdapter);
 
+        //observamos el mutableLiveData que contiene la lista de pokemons
         viewModel.getPokemonList().observe(getViewLifecycleOwner(), new Observer<List<DataSimple>>() {
             @Override
             public void onChanged(List<DataSimple> pokemons) {
+                //cuando cambie la lista de pokemons se actualiza el adaptador
                 pokemonAdapter.setPokemons(pokemons);
             }
         });
     }
 
+    //clase que define el ViewHolder
     class PokemonViewHolder extends RecyclerView.ViewHolder {
+        //texto y imagen que se muetra en la card de cada pokemon
         TextView name;
         ImageView imageView;
+
+        CardView cardView;
         public PokemonViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nombrePokemon);
             imageView = itemView.findViewById(R.id.imagePokemon);
+            cardView = itemView.findViewById(R.id.cardPokemon);
         }
     }
 
+    //clase que define el adaptador de Recyler View
     class PokemonAdapter extends RecyclerView.Adapter<PokemonViewHolder> {
 
+        //lista de pokemons
         List<DataSimple> pokemons;
 
         public DataSimple getPokemon(int posicion){
@@ -91,13 +107,25 @@ public class ListaPokemons extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PokemonViewHolder holder, int position) {
-            DataSimple pokemon = pokemons.get(position);
+            //se obtiene el pokemon de la lista
+            DataSimple pokemon = getPokemon(position);
+            //se asigna el nombre del pokemon
             holder.name.setText(pokemon.getName());
+            //se obtiene el id del pokemon mediante la url
             String id = pokemon.getUrl().split("/")[pokemon.getUrl().split("/").length - 1];
+            //se asigna la imagen del pokemon con el id
             Glide.with(holder.itemView)
                     .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"+ id +".png")
                     .into(holder.imageView);
             viewModel.selectColor(Integer.parseInt(id));
+         /*   viewModel.colorSelected().observe(getViewLifecycleOwner(), new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    //holder.cardView.setCardBackgroundColor(Color.parseColor(s));
+                    holder.imageView.setBackgroundColor(Color.parseColor(s));
+                }
+            });*/
+            //holder.cardView.setCardBackgroundColor(Color.parseColor(viewModel.colorSelected().getValue()));
             //holder.imageView.setBackgroundColor(Color.parseColor(viewModel.colorSelected().getValue()));
 
 

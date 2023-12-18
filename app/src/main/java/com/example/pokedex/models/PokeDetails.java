@@ -4,6 +4,9 @@ import com.example.pokedex.ClasesComunes.DataSimple;
 
 import java.util.List;
 
+/*
+    Esta clase se utiliza para obtener los detalles de cada pokemon
+ */
 public class PokeDetails {
 
      int id;

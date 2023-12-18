@@ -16,6 +16,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+// Esta interfaz se utiliza para obtener los datos de la API
 public interface JsonPlaceHolderApi {
     @GET("pokemon/")
     Call<DataList> getPokemonList(@Query("limit") int limit);
